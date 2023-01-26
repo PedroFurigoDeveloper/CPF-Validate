@@ -1,3 +1,4 @@
+//Function to show the result of true or false validation
 function Validate() {
     var cpf = document.getElementById('cpf_input').value
     document.getElementById('success').style.display = 'none';
@@ -5,10 +6,9 @@ function Validate() {
     
     console.log(cpf)
     
-    var resultValidate = ValidateCPF(cpf);
+    var resultValid = ValidateCPF(cpf);
 
-    // if(resultValidade == true) =
-    if(resultValidate){
+    if(resultValid){
         document.getElementById('success').style.display = 'block';
     } else{
         document.getElementById('error').style.display = 'block';
@@ -16,39 +16,39 @@ function Validate() {
 }
 
 function ValidateCPF(cpf) {
-    console.log(cpf.length);
-    if(cpf.length != 11){
-        return false;
-    } else{
-        var numeros = cpf.substring(0, 9); //apartir de um ponto inicial e final quebra o texto e retorna só oq pediu
+    regexCPF = new RegExp('[0-9]{3}[0-9]{3}[0-9]{3}[0-9]{2}')
+    console.log(cpf.match(regexCPF))
+    if(cpf.length == 11){
+        if(cpf.match(regexCPF)){
+            let number = cpf.substring(0, 9);
+            
+            var digits = cpf.substring(9);
         
-        var digitos = cpf.substring(9);
+            var sum = 0;
         
-        var soma = 0;
+            for (var i = 10; i > 1; i--){
+                sum+= number.charAt(10 - i) * i; 
+            } 
         
-        for (var i = 10; i > 1; i--){
-            soma+= numeros.charAt(10 - i) * i; //função que busca até encontrar e dps retorna a posição da string na lista
-        } 
-        console.log(soma);
+            var result = (sum % 11) < 2 ? 0 : 11 - (sum % 11);
         
-        var result = (soma % 11) < 2 ? 0 : 11 - (soma % 11);  //? pergunta e da resultado apos, se não : resultado falso
-
-        //Validação do primeiro dígito //
-        if(result != digitos.charAt(0)){
-            return false;
+            //Validation of fist digit //
+            if(result != digits.charAt(0)){
+                return false;
+            }
+        
+            sum= 0;
+        
+            for(var j = 11; j > 1; j--){
+                sum+= number.charAt(11 - j) * j;
+            }
+            result = sum % 11 > 2 ? 0 : 11 - (sum % 11);
+        
+            //validation of second digit //
+            if(result != digits.charAt(1)){
+                return false;
+            }
+            return true;
         }
-        
-        soma = 0;
-        
-        for(var j = 11; j > 1; j--){
-            soma+= numeros.charAt(11 - j) * j;
-        }
-        result = soma % 11 > 2 ? 0 : 11 - (soma % 11);
-        
-        //validação do segundo dígito
-        if(result != digitos.charAt(1)){
-            return false;
-        }
-        return true;
-    }
+    }   
 }
